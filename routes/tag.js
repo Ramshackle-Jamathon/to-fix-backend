@@ -102,7 +102,7 @@ function createProjectTag(req, res, next) {
 
   Project.findOne({ where: where })
     .then(data => {
-      if (!data) throw new ErrorHTTP('Invalid project ID', 400);
+      if (!data) throw new ErrorHTTP('No project with that ID found', 404);
       return Tag.create(options);
     })
     .then(data => {
@@ -148,11 +148,11 @@ function getProjectTag(req, res, next) {
 
   Project.findOne({ where: whereProject })
     .then(data => {
-      if (!data) throw new ErrorHTTP('Invalid project ID', 400);
+      if (!data) throw new ErrorHTTP('No project with that ID found', 404);
       return Tag.findOne({ where: whereTag });
     })
     .then(data => {
-      if (!data) throw new ErrorHTTP('Invalid tag ID', 400);
+      if (!data) throw new ErrorHTTP('No tag with that ID found', 404);
       res.json(data);
     })
     .catch(next);
@@ -192,11 +192,11 @@ function updateProjectTag(req, res, next) {
 
   Project.findOne({ where: whereProject })
     .then(data => {
-      if (!data) throw new ErrorHTTP('Invalid project ID', 400);
+      if (!data) throw new ErrorHTTP('No project with that ID found', 404);
       return Tag.findOne({ where: whereTag });
     })
     .then(data => {
-      if (!data) throw new ErrorHTTP('Invalid tag ID', 400);
+      if (!data) throw new ErrorHTTP('No tag with that ID found', 404);
       const updatedBody = _.merge({}, data.dataValues, req.body);
       return Tag.update(updatedBody, { where: whereTag, returning: true });
     })
@@ -224,11 +224,11 @@ function deleteProjectTag(req, res, next) {
 
   Project.findOne({ where: whereProject })
     .then(data => {
-      if (!data) throw new ErrorHTTP('Invalid project ID', 400);
+      if (!data) throw new ErrorHTTP('No project with that ID found', 404);
       return Tag.destroy({ where: whereTag });
     })
     .then(data => {
-      if (data === 0) throw new ErrorHTTP('Invalid tag ID', 400);
+      if (data === 0) throw new ErrorHTTP('No tag with that ID found', 404);
       logDriver.info(
         {
           action: 'delete-project-tag',
@@ -279,11 +279,11 @@ function getItemTags(req, res, next) {
 
   Project.findOne({ where: whereProject })
     .then(data => {
-      if (!data) throw new ErrorHTTP('Invalid project ID', 400);
+      if (!data) throw new ErrorHTTP('No project with that ID found', 404);
       return Item.findOne({ where: whereItem });
     })
     .then(data => {
-      if (!data) throw new ErrorHTTP('Invalid item ID', 400);
+      if (!data) throw new ErrorHTTP('No tag with that ID found', 404);
       return data.getTags();
     })
     .then(data => {
@@ -329,16 +329,16 @@ function createItemTag(req, res, next) {
   let tagName;
   Project.findOne({ where: whereProject })
     .then(data => {
-      if (!data) throw new ErrorHTTP('Invalid project ID', 400);
+      if (!data) throw new ErrorHTTP('No project with that ID found', 404);
       return Item.findOne({ where: whereItem });
     })
     .then(data => {
-      if (!data) throw new ErrorHTTP('Invalid item ID', 400);
+      if (!data) throw new ErrorHTTP('No item with that ID found', 404);
       store.item = data;
       return Tag.findOne({ where: whereTag });
     })
     .then(data => {
-      if (!data) throw new ErrorHTTP('Invalid tag ID', 400);
+      if (!data) throw new ErrorHTTP('No tag with that ID found', 404);
       store.tag = data;
       tagName = data.name;
       return store.item.addTag(data);
@@ -400,11 +400,11 @@ function deleteItemTag(req, res, next) {
 
   Project.findOne({ where: whereProject })
     .then(data => {
-      if (!data) throw new ErrorHTTP('Invalid project ID', 400);
+      if (!data) throw new ErrorHTTP('No project with that ID found', 404);
       return Item.findOne({ where: whereItem });
     })
     .then(data => {
-      if (!data) throw new ErrorHTTP('Invalid item ID', 400);
+      if (!data) throw new ErrorHTTP('No item with that ID found', 404);
       store.item = data;
       return store.item.removeTag(req.params.tag, { returning: true });
     })
